@@ -1,14 +1,79 @@
-# Welcome to your CDK TypeScript project
+# AgentCore CDK テンプレート
 
-This is a blank project for CDK development with TypeScript.
+AWS CDK を使って **Amazon Bedrock AgentCore Runtime** に Strands Agent をデプロイするテンプレートです。
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+---
 
-## Useful commands
+## アーキテクチャ
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `npx cdk deploy`  deploy this stack to your default AWS account/region
-* `npx cdk diff`    compare deployed stack with current state
-* `npx cdk synth`   emits the synthesized CloudFormation template
+```
+呼び出し元（CLI / フロントエンド）
+        ↓
+AgentCore Runtime（コンテナ）
+        ↓
+Strands Agent
+        ↓
+Claude on Bedrock（us-west-2）
+```
+
+---
+
+## ディレクトリ構成
+
+```
+agentcore-cdk/
+├── bin/
+│   └── agentcore-cdk.ts       # CDKアプリのエントリポイント
+├── lib/
+│   └── agentcore-cdk-stack.ts # AWSリソースの定義（編集する場所）
+├── agent/
+│   ├── app.py                 # Strands Agentのコード（編集する場所）
+│   ├── Dockerfile             # コンテナの設定
+│   └── requirements.txt       # Pythonパッケージ
+└── package.json
+```
+
+---
+
+## 前提条件
+
+- Node.js 18以上
+- AWS CLI（認証済み）
+- Docker
+
+---
+
+## セットアップ
+
+### 1. 依存パッケージのインストール
+
+```bash
+npm install
+```
+
+### 2. CDKブートストラップ（初回のみ）
+
+```bash
+cdk bootstrap
+```
+
+### 3. デプロイ
+
+```bash
+cdk deploy
+```
+
+デプロイ完了後、ターミナルに以下が表示されます：
+
+```
+Outputs:
+AgentcoreCdkStack.AgentRuntimeArn = arn:aws:bedrock-agentcore:us-west-2:XXXX:runtime/agentcore_cdk-XXXX
+```
+
+---
+
+## リソース削除
+
+```bash
+cdk destroy
+```

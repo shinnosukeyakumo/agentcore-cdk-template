@@ -1,0 +1,2 @@
+strands-agents[otel]
+bedrock-agentcore
